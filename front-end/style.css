@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+
+/* Edições globais e gerais de elementos */
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    font-family: "Google Sans Flex", sans-serif;
+    margin: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+main {
+    max-width: 900px;
+    margin: 30px auto;
+    color: #333;
+}
+
+section {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+
+    text-align: center;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+
+    font-size: 30px;
+}
+
+p {
+    color: #454545;
+    font-size: 16px;
+
+    margin: 10px;
+}
+
+button {
+    padding: 10px;
+    width: 150px;
+    
+    border: none;
+    border-radius: 10px;
+    
+    font-size: 15px;
+    font-weight: 300;
+    
+    background-color: #f3f2f2;
+    color: #454545;
+
+    transition: 300ms ease-out;
+
+    cursor: pointer;
+
+    scale: 1.0;
+}
+
+button:hover {
+    border: none;
+
+    background-color: #454545;
+    color: white;
+
+    transform: scale(1.05);
+}
+
+/* Edições globais do formulário */
+form {
+    display: flex;
+    flex-direction: column;
+
+    text-align: left;
+}
+
+input {
+    height: 40px;
+
+    border-radius: 10px;
+    border: 0.75px #454545 solid;
+
+    padding: 5px;
+}
+
+label {
+    color: #454545;
+    margin-left: 2.5px;
+}
+
+
+/* section de cadastro do usuário */
+
+.RegisterContainer {
+    display: flex;
+    flex-direction: column;
+
+    width: 85%;
+    margin: auto;
+    gap: 20px;
+}
+
+.inputLabel {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.submitForm {
+    display: flex;
+    flex-direction: row;
+
+    margin: 30px auto;
+    gap: 20px;
+}
+
+
+/* sessão de listagem de usuários */
+
+.listUsers {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+
+    margin: 30px auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.listUsers h2 {
+    margin: 0;
+}
+
+.gridUsers {
+    display: grid;
+    /* Cria 3 colunas de tamanhos iguais (1 fração cada) */
+    grid-template-columns: repeat(3, 1fr); 
+
+    /* Define duas linhas de 100 pixels de altura */
+    /* grid-template-rows: 300px; */
+    gap: 50px;
+
+    padding: 10px;
+
+    max-height: 600px;
+}
+
+.cardUser {
+    background-color: #333;
+    border-radius: 25px;
+
+    height: 200px;
+    width: 200px;
+
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 15px;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.informationUser {
+    width: 100%;
+    text-align: left;
+    margin: 0px 0px 5px 0px;
+}
+
+.informationUser p {
+    font-size: 14px;
+    font-weight: 300;
+    color: #f9f9f9;
+    margin: 0;
+
+}
+.informationUser h3 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.buttonsUser {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    width: 75%;
+    gap: 5px;
+
+    margin-top: 15px;
+}
+
+
+/* Sessão de tarefas do usuário */
+
+.inputTasks {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}

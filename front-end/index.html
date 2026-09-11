@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+    <header>
+      <h1>Cadastro de Usuários</h1>
+    </header>
+
+    <main>
+        <section class="register">
+            <h2>Novo Usuário</h2>
+            
+            <!-- Formulário de cadastro de um novo usuário -->
+            <form id="formRegister">
+                <div class="RegisterContainer">
+                    <!-- Nome do Usuário -->
+                    <div class="inputLabel">
+                        <label for="selectName">Nome:</label>
+                        <input type="text" id="name" required />
+                    </div>
+                    
+                    <!-- E-mail do Usuário -->
+                    <div class="inputLabel">
+                        <label for="selectEmail">E-mail:</label>
+                        <input type="text" id="email" required />
+                    </div>
+                    
+                    <!-- Curso do Usuário -->
+                    <div class="inputLabel">
+                        <label for="selectClass">Curso:</label>
+                        <input type="text" id="class" required />
+                    </div>
+                    
+                    <!-- Telefone do Usuário -->
+                    <div class="inputLabel">
+                        <label for="selectPhone">Telefone:</label>
+                        <input type="text" id="phone" required />
+                    </div>
+                    
+                    <!-- CPF do Usuário -->
+                    <div class="inputLabel">
+                        <label for="selectCpf">CPF:</label>
+                        <input type="text" id="cpf" required />
+                    </div>
+                    
+                    <!-- Senha do Usuário -->
+                    <div class="inputLabel">
+                        <label for="selectPassword">Senha:</label>
+                        <input type="text" id="password" required />
+                    </div>
+                </div>
+                
+                
+                <!-- Botões de salvar e cancelar edição -->
+                <div class="submitForm">
+                    <button type="submit" id="saveRegister">Salvar</button>
+                    <button type="submit" id="cancelRegister">Cancelar Edição</button>
+                </div>
+                
+                <!-- Spaw de erro ou suceso -->
+                <p>Failed to tetch</p>
+            </form>
+        </section>
+
+        <!-- Sessão de listagem dos usuários cadastrados -->
+        <section>
+            <div class="listUsers">
+                <h2>Usuários Cadastrados</h2>
+                <button type = "button" id="loadUsers">Carregar Usuários</button>
+            </div>
+
+            <div class="gridUsers">
+
+                <div class="cardUser">
+                    <div class="informationUser">
+                        <h3>Nome User</h3>
+                        <p>email user</p>
+                    </div>
+
+                    <div class="buttonsUser">
+                        <button type="button">Ver tarefas</button>
+                        <button type="button">Editar usuário</button>
+                    </div>
+                </div>
+                <div class="cardUser">
+                    <div class="informationUser">
+                        <h3>Nome User</h3>
+                        <p>email user</p>
+                    </div>
+
+                    <div class="buttonsUser">
+                        <button type="button">Ver tarefas</button>
+                        <button type="button">Editar usuário</button>
+                    </div>
+                </div>
+                <div class="cardUser">
+                    <div class="informationUser">
+                        <h3>Nome User</h3>
+                        <p>email user</p>
+                    </div>
+
+                    <div class="buttonsUser">
+                        <button type="button">Ver tarefas</button>
+                        <button type="button">Editar usuário</button>
+                    </div>
+                </div>
+                <div class="cardUser">
+                    <div class="informationUser">
+                        <h3>Nome User</h3>
+                        <p>email user</p>
+                    </div>
+
+                    <div class="buttonsUser">
+                        <button type="button">Ver tarefas</button>
+                        <button type="button">Editar usuário</button>
+                    </div>
+                </div>
+                <div class="cardUser">
+                    <div class="informationUser">
+                        <h3>Nome User</h3>
+                        <p>email user</p>
+                    </div>
+
+                    <div class="buttonsUser">
+                        <button type="button">Ver tarefas</button>
+                        <button type="button">Editar usuário</button>
+                    </div>
+                </div>
+                <div class="cardUser">
+                    <div class="informationUser">
+                        <h3>Nome User</h3>
+                        <p>email user</p>
+                    </div>
+
+                    <div class="buttonsUser">
+                        <button type="button">Ver tarefas</button>
+                        <button type="button">Editar usuário</button>
+                    </div>
+                </div>
+                <div class="cardUser">
+                    <div class="informationUser">
+                        <h3>Nome User</h3>
+                        <p>email user</p>
+                    </div>
+
+                    <div class="buttonsUser">
+                        <button type="button">Ver tarefas</button>
+                        <button type="button">Editar usuário</button>
+                    </div>
+                </div>
+                <div class="cardUser">
+                    <div class="informationUser">
+                        <h3>Nome User</h3>
+                        <p>email user</p>
+                    </div>
+
+                    <div class="buttonsUser">
+                        <button type="button">Ver tarefas</button>
+                        <button type="button">Editar usuário</button>
+                    </div>
+                </div>
+                <div class="cardUser">
+                    <div class="informationUser">
+                        <h3>Nome User</h3>
+                        <p>email user</p>
+                    </div>
+
+                    <div class="buttonsUser">
+                        <button type="button">Ver tarefas</button>
+                        <button type="button">Editar usuário</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+        <!-- Sessão das tarefas do usuário -->
+        <section>
+            <h2>Tarefas do Usuário</h2>
+
+            <p>Nenhum usuário selecionado.</p>
+
+            <div class="inputTasks">
+                <input
+                type="text"
+                name="titulo da tarefa"
+                placeholder="Título da tarefa"
+                />
+                <input type="text" name="descricao" placeholder="Descrição" />
+
+                <button type="button">Cadastrar Tarefa</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
