@@ -1,33 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
 
+
+:root {
+    --background-color: #0f172a;
+    --section-color: #1e293b;
+    
+    --border-color: #334155;
+
+    --primary-text-color: #e2e8f0;
+    --secundary-text-color: #94a3b8;
+
+    --button-color: #4c8bf0;
+    --button-hover-color: #2563eb;
+}
+
+
 /* Edições globais e gerais de elementos */
 * {
     box-sizing: border-box;
     margin: 0;
+    color: var(--primary-text-color);
 }
 
 body {
     font-family: "Google Sans Flex", sans-serif;
     margin: 0;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: #0f172a;
 }
 
 header {
-    background-color: #333;
-    color: white;
+    background-color: #222236;
     padding: 10px;
     text-align: center;
 }
 
 main {
-    max-width: 900px;
+    max-width: 800px;
     margin: 30px auto;
     color: #333;
 }
 
 section {
-    background-color: white;
+    background-color: var(--section-color);
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 15px;
@@ -47,7 +61,7 @@ h2 {
 }
 
 p {
-    color: #454545;
+    color: var(--secundary-text-color);
     font-size: 16px;
 
     margin: 10px;
@@ -61,10 +75,10 @@ button {
     border-radius: 10px;
     
     font-size: 15px;
-    font-weight: 300;
+    font-weight: 500;
     
-    background-color: #f3f2f2;
-    color: #454545;
+    background-color: var(--button-color);
+    color: var(--primary-text-color);
 
     transition: 300ms ease-out;
 
@@ -76,7 +90,7 @@ button {
 button:hover {
     border: none;
 
-    background-color: #454545;
+    background-color: var(--button-hover-color);
     color: white;
 
     transform: scale(1.05);
@@ -92,22 +106,38 @@ form {
 
 input {
     height: 40px;
+    padding-left: 10px;
 
     border-radius: 10px;
-    border: 0.75px #454545 solid;
+    border: none;
+    background-color: var(--border-color);
 
-    padding: 5px;
+    text-align: left;
+
+    transition: 200ms ease;
+}
+
+input::placeholder {
+    color: var(--secundary-text-color);
+    font-size: 14px;
+    font-weight: 300;
+}
+
+input:focus {
+    outline: 0.5px solid var(--button-hover-color);
+    box-shadow: 0 0 0 2px var(--button-color);
+    transform: scale(1.005);
 }
 
 label {
-    color: #454545;
+    color: var(--primary-text-color);
     margin-left: 2.5px;
 }
 
 
 /* section de cadastro do usuário */
 
-.RegisterContainer {
+.registerContainer {
     display: flex;
     flex-direction: column;
 
@@ -153,23 +183,26 @@ label {
     /* Cria 3 colunas de tamanhos iguais (1 fração cada) */
     grid-template-columns: repeat(3, 1fr); 
 
-    /* Define duas linhas de 100 pixels de altura */
-    /* grid-template-rows: 300px; */
-    gap: 50px;
+    gap: 40px;
 
     padding: 10px;
 
-    max-height: 600px;
+    max-height: 460px;
+    min-height: 0px;
+
+    overflow-y: auto;
+
+    justify-content: center;
 }
 
 .cardUser {
-    background-color: #333;
+    background-color: var(--border-color);
     border-radius: 25px;
 
     height: 200px;
     width: 200px;
 
-    color: white;
+    color: var(--primary-text-color);
 
     display: flex;
     flex-direction: column;
@@ -186,16 +219,16 @@ label {
     margin: 0px 0px 5px 0px;
 }
 
-.informationUser p {
-    font-size: 14px;
-    font-weight: 300;
-    color: #f9f9f9;
-    margin: 0;
-
-}
 .informationUser h3 {
     font-size: 18px;
     font-weight: 700;
+}
+.informationUser p {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--secundary-text-color);
+    margin: 0;
+
 }
 
 .buttonsUser {
@@ -204,9 +237,19 @@ label {
 
     align-items: center;
     width: 75%;
-    gap: 5px;
+    gap: 7.5px;
 
+    
     margin-top: 15px;
+}
+
+.buttonsUser button {
+    width: 125px;
+    background-color: var(--section-color);
+}
+
+.buttonsUser button:hover {
+    background-color: var(--button-hover-color);
 }
 
 
@@ -216,7 +259,14 @@ label {
     display: flex;
     flex-direction: column;
 
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 
     margin-top: 20px;
+    /* width: 80%; */
+}
+
+.inputTasks input {
+    width: 85%;
 }
