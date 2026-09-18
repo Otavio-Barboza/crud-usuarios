@@ -1,51 +1,49 @@
-let newUser = {
-    name : null,
-    email : null,
-    class : null,
-    phone : null,
-    cpf : null,
-    password : null
-}
-
+// novos usuários - formulário
 const inputName = document.querySelector("#inputName");
-
-inputName.addEventListener("change", (event) => {
-    newUser.name = event.target.value;
-    console.log(newUser);
-});
-
-
 const inputEmail = document.querySelector("#inputEmail");
+const inputClass = document.querySelector("#inputClass");
+const inputPhone = document.querySelector("#inputPhone");
+const inputCpf = document.querySelector("#inputCpf");
+const inputPassword = document.querySelector("#inputPassword");
 
-inputEmail.addEventListener("change", (event) => {
-    newUser.email = event.target.value;
+// eventos
+inputName.addEventListener("input", (event) => {
     console.log(newUser);
 });
 
-
-const inputClass = document.querySelector("#inputClass");
+inputEmail.addEventListener("input", (event) => {
+    console.log(newUser);
+});
 
 inputClass.addEventListener("input", (event) => {
     console.log(event.target.value);
 });
 
-
-const inputPhone = document.querySelector("#inputPhone");
-
-inputPhone.addEventListener("input", (event) => {
+// evento para máscara do Telefone
+inputPhone.addEventListener("blur", (event) => {
     console.log(event.target.value);
 });
 
-
-const inputCpf = document.querySelector("#inputCpf");
-
-inputCpf.addEventListener("input", (event) => {
+// evento para máscara do CPF
+inputCpf.addEventListener("blur", (event) => {
     console.log(event.target.value);
 });
-
-
-const inputPassword = document.querySelector("#inputPassword");
 
 inputPassword.addEventListener("input", (event) => {
     console.log(event.target.value);
+});
+
+
+// buttons
+
+const buttonCancelRegister = document.querySelector("#cancelRegister");
+
+// eventos
+buttonCancelRegister.addEventListener("click", () => {
+    inputName.value = "";
+    inputEmail.value = "";
+    inputClass.value = "";
+    inputPhone.value = "";
+    inputCpf.value = "";
+    inputPassword.value = "";
 });

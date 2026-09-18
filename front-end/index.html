@@ -4,8 +4,8 @@
     <title></title>
     <meta charset = "UTF-8" />
     <meta name = "viewport" content = "width=device-width, initial-scale=1" />
-
     <link rel = "stylesheet" href = "./style.css"/>
+    <link rel="stylesheet" href="https://cloudflare.com" />
 </head>
 <body>
     <header>
@@ -60,6 +60,7 @@
                             type = "text" 
                             id = "inputPhone" 
                             placeholder = "(00) 90000-0000"
+                            maxlength = "11"
                             required 
                         />
                     </div>
@@ -71,6 +72,7 @@
                             type = "text" 
                             id = "inputCpf" 
                             placeholder = "000.000.000-00"
+                            maxlength = "11"
                             required 
                         />
                     </div>
@@ -81,9 +83,33 @@
                         <input 
                             type = "text" 
                             id = "inputPassword" 
-                            placeholder = ""
+                            placeholder = "Digite sua senha"
                             required 
                         />
+                    </div>
+                    
+                    <div class = "validationPassword" id = "validationPassword">
+                        <p class = "validation">
+                            <i class = "bi bi-x-circle-fill"></i>
+                            mínimo 8 caracteres.
+                        </p>
+                        <p class = "validation">
+                            <i class = "bi bi-x-circle-fill"></i>
+                            mínimo uma letra maiúscula.
+                        </p>
+                        <p class = "validation">
+                            <i class = "bi bi-x-circle-fill"></i>
+                            mínimo uma letra minúscula.
+                        </p>
+                        <p class = "validation">
+                            <i class = "bi bi-x-circle-fill"></i>
+                            mínimo um número.
+                        </p>
+                        <p class = "validation">
+                            <!-- <i class="bi bi-check-circle-fill"></i> -->
+                            <i class = "bi bi-x-circle-fill"></i>
+                            mínimo um caractere especial.
+                        </p>
                     </div>
                 </div>
                 
@@ -92,6 +118,7 @@
                     <button type = "submit" id = "saveRegister">Salvar</button>
                     <button type = "submit" id = "cancelRegister">Cancelar Edição</button>
                 </div>
+
                 
                 <!-- Spaw de erro ou suceso -->
                 <p>Failed to tetch</p>
