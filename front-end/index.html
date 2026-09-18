@@ -5,7 +5,6 @@
     <meta charset = "UTF-8" />
     <meta name = "viewport" content = "width=device-width, initial-scale=1" />
     <link rel = "stylesheet" href = "./style.css"/>
-    <link rel="stylesheet" href="https://cloudflare.com" />
 </head>
 <body>
     <header>
@@ -90,24 +89,24 @@
                     
                     <div class = "validationPassword" id = "validationPassword">
                         <p class = "validation">
-                            <i class = "bi bi-x-circle-fill"></i>
+                            <i class = "bi bi-x-circle-fill" id = "iconMinCaractere"></i>
                             mínimo 8 caracteres.
                         </p>
                         <p class = "validation">
-                            <i class = "bi bi-x-circle-fill"></i>
+                            <i class = "bi bi-x-circle-fill" id = "iconMax"></i>
                             mínimo uma letra maiúscula.
                         </p>
                         <p class = "validation">
-                            <i class = "bi bi-x-circle-fill"></i>
+                            <i class = "bi bi-x-circle-fill" id = "iconMin"></i>
                             mínimo uma letra minúscula.
                         </p>
                         <p class = "validation">
-                            <i class = "bi bi-x-circle-fill"></i>
+                            <i class = "bi bi-x-circle-fill" id = "iconNumber"></i>
                             mínimo um número.
                         </p>
                         <p class = "validation">
                             <!-- <i class="bi bi-check-circle-fill"></i> -->
-                            <i class = "bi bi-x-circle-fill"></i>
+                            <i class = "bi bi-x-circle-fill" id = "iconSpecialCaractere"></i>
                             mínimo um caractere especial.
                         </p>
                     </div>
@@ -116,12 +115,12 @@
                 <!-- Botões de salvar e cancelar edição -->
                 <div class = "submitForm">
                     <button type = "submit" id = "saveRegister">Salvar</button>
-                    <button type = "submit" id = "cancelRegister">Cancelar Edição</button>
+                    <button type = "click" id = "cancelRegister">Cancelar Edição</button>
                 </div>
 
                 
                 <!-- Spaw de erro ou suceso -->
-                <p>Failed to tetch</p>
+                <span id = "messageRegister"></span>
             </form>
         </section>
 
@@ -132,7 +131,7 @@
                 <button type = "button" id = "loadUsers">Carregar Usuários</button>
             </div>
 
-            <div class = "gridUsers">
+            <div class = "gridUsers" id = "gridUsers">
                 <!-- exemplo da estrutura do card -->
 
                 <div class = "cardUser">

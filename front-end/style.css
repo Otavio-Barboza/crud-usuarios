@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap");
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
 
 :root {
     --background-color: #0f172a;
     --section-color: #1e293b;
-    
+
     --border-color: #334155;
 
     --primary-text-color: #e2e8f0;
@@ -16,7 +16,6 @@
     --icon-not-sucess: #c45151;
     --icon-sucess: #ffd900;
 }
-
 
 /* Edições globais e gerais de elementos */
 * {
@@ -73,13 +72,13 @@ p {
 button {
     padding: 10px;
     width: 150px;
-    
+
     border: none;
     border-radius: 10px;
-    
+
     font-size: 15px;
     font-weight: 500;
-    
+
     background-color: var(--button-color);
     color: var(--primary-text-color);
 
@@ -87,7 +86,7 @@ button {
 
     cursor: pointer;
 
-    scale: 1.0;
+    scale: 1;
 }
 
 button:hover {
@@ -137,6 +136,12 @@ label {
     margin-left: 2.5px;
 }
 
+.correct {
+    border: 1px solid var(--icon-sucess);
+}
+.error {
+    border: 1px solid var(--icon-not-sucess);
+}
 
 /* section de cadastro do usuário */
 
@@ -156,9 +161,8 @@ label {
     gap: 5px;
 }
 
-
 .validationPassword {
-    /* display: none;     */
+/* display: none;     */
     margin-left: 15px;
 }
 
@@ -192,7 +196,6 @@ label {
     gap: 20px;
 }
 
-
 /* sessão de listagem de usuários */
 
 .listUsers {
@@ -212,7 +215,7 @@ label {
 .gridUsers {
     display: grid;
     /* Cria 3 colunas de tamanhos iguais (1 fração cada) */
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(3, 1fr);
 
     gap: 40px;
 
@@ -245,8 +248,10 @@ label {
     justify-content: center;
     align-items: center;
 
-    transition: transform 300ms, box-shadow 400ms;
-    scale: 1.0;
+    transition:
+    transform 300ms,
+    box-shadow 400ms;
+    scale: 1;
     box-shadow: 0px 0px 0px #000;
 }
 .cardUser:hover {
@@ -269,7 +274,6 @@ label {
     font-weight: 300;
     color: var(--secundary-text-color);
     margin: 0;
-
 }
 
 .buttonsUser {
@@ -280,7 +284,6 @@ label {
     width: 75%;
     gap: 7.5px;
 
-    
     margin-top: 15px;
 }
 
@@ -290,9 +293,8 @@ label {
 }
 
 .buttonsUser button:hover {
-    background-color: var(--button-hover-color);
+    -color: var(--button-hover-color);
 }
-
 
 /* Sessão de tarefas do usuário */
 
