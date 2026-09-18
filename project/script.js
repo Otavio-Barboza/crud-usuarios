@@ -17,6 +17,7 @@ const inputPhone = document.querySelector("#inputPhone");
 const inputCpf = document.querySelector("#inputCpf");
 const inputPassword = document.querySelector("#inputPassword");
 
+
 // eventos
 inputName.addEventListener("input", (event) => {
     console.log(newUser);
@@ -197,10 +198,53 @@ buttonSaveRegister.addEventListener("click", (event) => {
 
 buttonloadUsers.addEventListener("click", async (event) => {
     const gridUsers = document.querySelector("#gridUsers");
-    const data = awaitgetUsers();
+    const data = await getUsers();
+
+    gridUsers.textContent = ""
 
     for (const user of data) {
-        const cardUser = null;
+        // criando as bases
+        const cardUser = document.createElement("div");
+        const informationUser = document.createElement("div");
+        const buttonsUser = document.createElement("div");
+
+        // criando a primeira seção da base de cards
+        const h3 = document.createElement("h3");
+        const p = document.createElement("p");
+        
+        // criando a segunda seção da base de cards
+        const buttonTask = document.createElement("button");
+        const buttonEdit = document.createElement("button");
+        
+        // adicioando conteúdo aos elementos do primeiro conteúdo
+        h3.textContent = user.nome;
+        p.textContent = user.email;
+
+        // criando os botões da segunda seção
+        buttonTask.textContent = "Ver Tarefas";
+        buttonEdit.textContent = "Editar Usuário";
+
+        // Adicionando o evento de click em ambos botões
+        buttonTask.addEventListener("click", () => {console.log("Vendo Tarefas do Usuário");});
+        buttonEdit.addEventListener("click", () => {console.log("Editando Usuário");});
+        
+        // adicionando as seções principais
+        cardUser.appendChild(informationUser);
+        cardUser.appendChild(buttonsUser);
+
+        // adicionando os conteúdos das sessões
+        informationUser.appendChild(h3);
+        informationUser.appendChild(p);
+        buttonsUser.append(buttonTask);
+        buttonsUser.append(buttonEdit);
+
+        // adicionando as classes de estilo
+        cardUser.classList.add("cardUser");
+        informationUser.classList.add("informationUser");
+        buttonsUser.classList.add("buttonsUser");
+
+        // adicionando o card à grid
+        gridUsers.appendChild(cardUser);
     }
 });
 
@@ -211,9 +255,7 @@ async function getUsers() {
     const response = await fetch(
         "http://localhost:3000/usuarios"
     );
-    const users = await response.json();
-
-    console.log(users);
+    return await response.json();
 }
 
 async function getTasks() {}

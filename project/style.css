@@ -293,7 +293,7 @@ label {
 }
 
 .buttonsUser button:hover {
-    -color: var(--button-hover-color);
+    background-color: var(--button-hover-color);
 }
 
 /* Sessão de tarefas do usuário */
