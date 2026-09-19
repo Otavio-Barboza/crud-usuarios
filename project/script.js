@@ -171,7 +171,7 @@ inputPassword.addEventListener("input", () => {
 // buttons
 const buttonCancelRegister = document.querySelector("#cancelRegister");
 const buttonSaveRegister = document.querySelector("#saveRegister");
-const buttonloadUsers = document.querySelector("#loadUsers");
+const buttonLoadUsers = document.querySelector("#loadUsers");
 
 // eventos
 buttonCancelRegister.addEventListener("click", () => {
@@ -196,11 +196,11 @@ buttonSaveRegister.addEventListener("click", (event) => {
     }, 4000);
 });
 
-buttonloadUsers.addEventListener("click", async (event) => {
+buttonLoadUsers.addEventListener("click", async (event) => {
     const gridUsers = document.querySelector("#gridUsers");
     const data = await getUsers();
 
-    gridUsers.textContent = ""
+    gridUsers.textContent = "";
 
     for (const user of data) {
         // criando as bases
@@ -225,8 +225,13 @@ buttonloadUsers.addEventListener("click", async (event) => {
         buttonEdit.textContent = "Editar Usuário";
 
         // Adicionando o evento de click em ambos botões
-        buttonTask.addEventListener("click", () => {console.log("Vendo Tarefas do Usuário");});
-        buttonEdit.addEventListener("click", () => {console.log("Editando Usuário");});
+        buttonTask.addEventListener("click", async () => {
+            const dataUserTasks = await getTasks(user.id);
+            await loadTasks(dataUserTasks);
+        });
+        buttonEdit.addEventListener("click", () => {
+            console.log("Editando Usuário");
+        });
         
         // adicionando as seções principais
         cardUser.appendChild(informationUser);
@@ -239,14 +244,61 @@ buttonloadUsers.addEventListener("click", async (event) => {
         buttonsUser.append(buttonEdit);
 
         // adicionando as classes de estilo
-        cardUser.classList.add("cardUser");
-        informationUser.classList.add("informationUser");
+        cardUser.classList.add("card");
+        informationUser.classList.add("information");
+        buttonsUser.classList.add("buttons");
         buttonsUser.classList.add("buttonsUser");
 
         // adicionando o card à grid
         gridUsers.appendChild(cardUser);
     }
 });
+
+async function loadTasks(tasks) {
+    const gridTasks = document.querySelector("#gridTasks");
+
+    gridTasks.textContent = "";
+
+    for (const task of tasks) {
+        // criando bases
+        const cardTask = document.createElement("div");
+        const informationTask = document.createElement("div");
+        const buttonTask = document.createElement("div");
+        
+        // criando elementos da primeira sessão
+        const h3 = document.createElement("h3");
+        const p = document.createElement("p");
+        const button = document.createElement("button");
+
+        // Adicionando conteúdo aos elementos
+        h3.textContent = task.titulo;
+        p.textContent = task.descricao;
+        button.textContent = task.concluida ? "Concluída" : "Pendente";
+        
+        // adicionando evento de troca do status da tarefa
+        button.addEventListener("click", async () => {});
+
+        // adicionando elementos ao dom
+        cardTask.appendChild(informationTask);
+        cardTask.appendChild(buttonTask);
+        informationTask.appendChild(h3);
+        informationTask.appendChild(p);
+        buttonTask.appendChild(button);
+        
+        // adicionando as classes de estilo
+        cardTask.classList.add("card");
+        informationTask.classList.add("information");
+        
+        buttonTask.classList.add("buttons");
+        buttonTask.classList.add(
+            task.concluida ? "buttonsTasksCheck" : "buttonsTasksPending"
+        );
+
+        // adicionando card ao dom
+        gridTasks.appendChild(cardTask);
+    }
+}
+
 
 // Manipulações com a API
 
@@ -258,16 +310,24 @@ async function getUsers() {
     return await response.json();
 }
 
-async function getTasks() {}
+async function getTasks(userId) {
+    const response = await fetch(
+        `http://localhost:3000/usuarios/${userId}/tarefas`
+    );
+    return await response.json();
+}
 
 
 // create
-async function createUser() {}
+async function createUser() {
+
+}
+
 async function createTask() {}
 
 
 // update
-async function updateUsers() {}
+async function updateUser() {}
 async function updateStatusTask() {}
 
 

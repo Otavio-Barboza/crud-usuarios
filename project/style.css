@@ -212,7 +212,7 @@ label {
     margin: 0;
 }
 
-.gridUsers {
+.grid {
     display: grid;
     /* Cria 3 colunas de tamanhos iguais (1 fração cada) */
     grid-template-columns: repeat(3, 1fr);
@@ -229,7 +229,7 @@ label {
     justify-content: center;
 }
 
-.cardUser {
+.card {
     background: linear-gradient(45deg, var(--border-color), #212c3d);
 
     border: 2px solid rgba(255, 255, 255, 0.05);
@@ -254,29 +254,29 @@ label {
     scale: 1;
     box-shadow: 0px 0px 0px #000;
 }
-.cardUser:hover {
+.card:hover {
     transform: scale(1.025);
     box-shadow: 0px 0px 10px var(--secundary-text-color);
 }
 
-.informationUser {
+.information {
     width: 100%;
     text-align: left;
     margin: 0px 0px 5px 0px;
 }
 
-.informationUser h3 {
+.information h3 {
     font-size: 18px;
     font-weight: 700;
 }
-.informationUser p {
+.information p {
     font-size: 14px;
     font-weight: 300;
     color: var(--secundary-text-color);
     margin: 0;
 }
 
-.buttonsUser {
+.buttons {
     display: flex;
     flex-direction: column;
 
@@ -287,13 +287,25 @@ label {
     margin-top: 15px;
 }
 
+/* classes de cores para os botões */
+.buttonsTasksCheck button {
+    background-color: var(--icon-sucess);
+    color: var(--background-color);
+}
+.buttonsTasksPending button {
+    background-color: var(--icon-not-sucess);
+}
 .buttonsUser button {
-    width: 125px;
     background-color: var(--section-color);
 }
 
-.buttonsUser button:hover {
-    background-color: var(--button-hover-color);
+/* classe padrão dos botões */
+.buttons button {
+    width: 125px;
+}
+.buttons button:hover {
+    background-color: var(--secundary-text-color);
+    color: var(--primary-text-color);
 }
 
 /* Sessão de tarefas do usuário */
@@ -312,4 +324,8 @@ label {
 
 .inputTasks input {
     width: 85%;
+}
+
+.taskTitle {
+    margin-top: 20px;
 }
