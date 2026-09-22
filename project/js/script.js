@@ -1,40 +1,36 @@
-// Utils
-function resetFields() {
-    inputName.value = "";
-    inputEmail.value = "";
-    inputClass.value = "";
-    inputPhone.value = "";
-    inputCpf.value = "";
-    inputPassword.value = "";
-}
+// imports de utils
+import {
+    selectedUser,
+    validationPassword,
+    resetFields,
+    selectCardUser
+} from "./utils.js";
+
+// import das functions de acesso a API.
+import {
+    getUsers,
+    getTasks,
+    createUser,
+    createTask,
+    updateUser,
+    updateStatusTask,
+    deleteUser,
+    deleteTask
+} from "./api.js";
 
 
-// novos usuários - formulário
+// inputs que não possuem eventos.
 const inputName = document.querySelector("#inputName");
 const inputEmail = document.querySelector("#inputEmail");
 const inputClass = document.querySelector("#inputClass");
+
+
+// evento para máscara e input do Telefone
 const inputPhone = document.querySelector("#inputPhone");
-const inputCpf = document.querySelector("#inputCpf");
-const inputPassword = document.querySelector("#inputPassword");
 
-
-// eventos
-inputName.addEventListener("input", (event) => {
-    console.log(newUser);
-});
-
-inputEmail.addEventListener("input", (event) => {
-    console.log(newUser);
-});
-
-inputClass.addEventListener("input", (event) => {
-    console.log(event.target.value);
-});
-
-// evento para máscara do Telefone
 inputPhone.addEventListener("blur", () => {
     const regex = /^\(\d{2}\) \d{5}-\d{4}$/;
-
+    
     if (!regex.test(inputPhone.value)) {
         inputPhone.classList.remove("correct");
         inputPhone.classList.add("error");
@@ -46,17 +42,20 @@ inputPhone.addEventListener("blur", () => {
 
 inputPhone.addEventListener("input", (event) => {
     const mascara = /(\d{2})(\d{5})(\d{4})/;
-
+    
     inputPhone.value = event.target.value
-        .replace(/\D/g, "")
-        .slice(0, 11)
-        .replace(mascara, "($1) $2-$3");
+    .replace(/\D/g, "")
+    .slice(0, 11)
+    .replace(mascara, "($1) $2-$3");
 });
 
-// evento para máscara do CPF
+
+// evento para máscara e input do CPF
+const inputCpf = document.querySelector("#inputCpf");
+
 inputCpf.addEventListener("blur", (event) => {
     const regex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
-
+    
     if (!regex.test(inputCpf.value)) {
         inputCpf.classList.remove("correct");
         inputCpf.classList.add("error");
@@ -76,125 +75,97 @@ inputCpf.addEventListener("input", (event) => {
 });
 
 
-let validationPassword = {
-    lowercase : false,
-    uppercase : false,
-    specialCaractere : false,
-    minCaractere : false,
-    number : false
-}
+// Evento de validação do input da senha
+const inputPassword = document.querySelector("#inputPassword");
 
 inputPassword.addEventListener("input", () => {
 
-    // icons
-    const iconMinCaractere = document.querySelector("#iconMinCaractere");
-    const regexMinCaractere = /.{8,}/;
-    
-    if (regexMinCaractere.test(inputPassword.value)) {
-        iconMinCaractere.classList.remove("bi-x-circle-fill");
-        iconMinCaractere.classList.add("bi-check-circle-fill");
-        
-        validationPassword.minCaractere = true;
-    } else {
-        iconMinCaractere.classList.remove("bi-check-circle-fill");
-        iconMinCaractere.classList.add("bi-x-circle-fill");
-        
-        validationPassword.minCaractere = false;
-    }
-    
+    for (let index = 0; index < validationPassword.length; index++) {
 
-    const iconMax = document.querySelector("#iconMax");
-    const regexMax = /[A-Z]/;
-    
-    if (regexMax.test(inputPassword.value)) {
-        iconMax.classList.remove("bi-x-circle-fill");
-        iconMax.classList.add("bi-check-circle-fill");
-        
-        validationPassword.uppercase = true;
-    } else {
-        iconMax.classList.remove("bi-check-circle-fill");
-        iconMax.classList.add("bi-x-circle-fill");
-        
-        validationPassword.uppercase = false;
-    }
-    
-
-    const iconMin = document.querySelector("#iconMin");
-    const regexMin = /[a-z]/;
-    
-    if (regexMin.test(inputPassword.value)) {
-        iconMin.classList.remove("bi-x-circle-fill");
-        iconMin.classList.add("bi-check-circle-fill");
-        
-        validationPassword.lowercase = true;
-    } else {
-        iconMin.classList.remove("bi-check-circle-fill");
-        iconMin.classList.add("bi-x-circle-fill");
-        
-        validationPassword.lowercase = false;
-    }
-    
-
-    const iconNumber = document.querySelector("#iconNumber");
-    const regexNumber = /\d/;
-    
-    if (regexNumber.test(inputPassword.value)) {
-        iconNumber.classList.remove("bi-x-circle-fill");
-        iconNumber.classList.add("bi-check-circle-fill");
-        
-        validationPassword.number = true;
-    } else {
-        iconNumber.classList.remove("bi-check-circle-fill");
-        iconNumber.classList.add("bi-x-circle-fill");
-        
-        validationPassword.number = false;
-    }
-    
-
-    const iconSpecialCaractere = document.querySelector("#iconSpecialCaractere");
-    const regexSpecialCaractere = /[!@#$%^&*(),.?":{}|<>_]/;
-    
-    if (regexSpecialCaractere.test(inputPassword.value)) {
-        iconSpecialCaractere.classList.remove("bi-x-circle-fill");
-        iconSpecialCaractere.classList.add("bi-check-circle-fill");
-        
-        validationPassword.specialCaractere = true;
-    } else {
-        iconSpecialCaractere.classList.remove("bi-check-circle-fill");
-        iconSpecialCaractere.classList.add("bi-x-circle-fill");
-        
-        validationPassword.specialCaractere = false;
+        if (validationPassword[index].regex.test(inputPassword.value)) {
+            validationPassword[index].icon.classList.remove("bi-x-circle-fill");
+            validationPassword[index].icon.classList.add("bi-check-circle-fill");
+            validationPassword[index].status = true;
+        } else {
+            validationPassword[index].icon.classList.remove("bi-check-circle-fill");
+            validationPassword[index].icon.classList.add("bi-x-circle-fill");
+            validationPassword[index].status = false;
+        }
     }
 });
 
 
-// buttons
+// botão de cancelar os registros novos do usuário
 const buttonCancelRegister = document.querySelector("#cancelRegister");
-const buttonSaveRegister = document.querySelector("#saveRegister");
-const buttonLoadUsers = document.querySelector("#loadUsers");
 
-// eventos
 buttonCancelRegister.addEventListener("click", () => {
     resetFields();
 });
 
-buttonSaveRegister.addEventListener("click", (event) => {
-    event.preventDefault();
+
+// botão de salvar os dados novos de usuário
+const buttonSaveRegister = document.querySelector("#saveRegister");
+
+buttonSaveRegister.addEventListener("click", async (event) => {
+    // event.preventDefault();
     
     const isPasswordValid = Object.values(validationPassword).every(value => value === true);
     const messageRegister = document.querySelector("#messageRegister");
-
+    
     if (isPasswordValid) {
         messageRegister.textContent = "Usuário Cadastrado com Sucesso!";
+        await createUser({
+            name : inputName.value,
+            email : inputEmail.value,
+            class : inputClass.value,
+            phone : inputPhone.value,
+            cpf : inputCpf.value,
+            password : inputPassword.value
+        });
         resetFields();
     } else {
         messageRegister.textContent = "Algum dado inserido está incorreto.";
     }
-
+    
     setTimeout(() => {
         messageRegister.textContent = "";
     }, 4000);
 });
+
+
+//  botão de salvar a nova tarefa
+const buttonSaveTask = document.querySelector("#saveTask");
+
+buttonSaveTask.addEventListener("click", async () => {
+    const inputTitleTask = document.querySelector("#inputTitleTask");
+    const inputDescriptionTask = document.querySelector("#inputDescriptionTask");
+    
+    if (selectedUser.userId == null) {
+        console.log("Selecione um usuário para adicionar uma tarefa!")
+        return
+    } 
+    
+    if (inputTitleTask.value.trim() === "") {
+        console.log("Preencha o campo de título da tarefa!")
+        return
+    }
+    
+    if (inputDescriptionTask.value.trim() === "") {
+        console.log("Preencha o campo de descrição da tarefa!")
+        return
+    }
+    
+    createTask({
+        title : inputTitleTask.value,
+        description : inputDescriptionTask.value,
+        status : false,
+        userId : selectedUser.userId
+    });
+});
+
+
+// carregamento dos usuários
+const buttonLoadUsers = document.querySelector("#loadUsers");
 
 buttonLoadUsers.addEventListener("click", async (event) => {
     const gridUsers = document.querySelector("#gridUsers");
@@ -215,20 +186,46 @@ buttonLoadUsers.addEventListener("click", async (event) => {
         // criando a segunda seção da base de cards
         const buttonTask = document.createElement("button");
         const buttonEdit = document.createElement("button");
-        
+        const buttonRemove = document.createElement("button");
+
         // adicioando conteúdo aos elementos do primeiro conteúdo
         h3.textContent = user.nome;
         p.textContent = user.email;
-
+        
         // criando os botões da segunda seção
         buttonTask.textContent = "Ver Tarefas";
         buttonEdit.textContent = "Editar Usuário";
+        buttonRemove.textContent = "Excluir Usuário";
 
+        // adicionando o ID ao card para recuperá-lo ao clicar nele e alterar seu estilo
+        cardUser.id = user.id;
+
+        // Adicionando eventos de click aos cards.
+        cardUser.addEventListener("click", () => {
+            // carregando dados temporários
+            selectedUser.name = user.nome;
+            selectedUser.userId = user.id;
+            
+            // alterando estilo
+            console.log(`clicando no card ${cardUser.id}`);
+            selectCardUser(cardUser);
+        });
+        
         // Adicionando o evento de click em ambos botões
         buttonTask.addEventListener("click", async () => {
+            // carregando dados temporários
+            selectedUser.name = user.nome;
+            selectedUser.userId = user.id;
+            selectedUser.cardId = user.id;
+            
+            // alterando estilo
+            selectCardUser(cardUser);
+            
+            // carregando tarefas do usuário
             const dataUserTasks = await getTasks(user.id);
             await loadTasks(dataUserTasks);
         });
+
         buttonEdit.addEventListener("click", () => {
             console.log("Editando Usuário");
         });
@@ -236,12 +233,16 @@ buttonLoadUsers.addEventListener("click", async (event) => {
         // adicionando as seções principais
         cardUser.appendChild(informationUser);
         cardUser.appendChild(buttonsUser);
+        cardUser.appendChild(buttonsUser);
 
+        
         // adicionando os conteúdos das sessões
         informationUser.appendChild(h3);
         informationUser.appendChild(p);
-        buttonsUser.append(buttonTask);
-        buttonsUser.append(buttonEdit);
+        buttonsUser.appendChild(buttonTask);
+        buttonsUser.appendChild(buttonEdit);
+        buttonsUser.appendChild(buttonRemove);
+
 
         // adicionando as classes de estilo
         cardUser.classList.add("card");
@@ -268,22 +269,25 @@ async function loadTasks(tasks) {
         // criando elementos da primeira sessão
         const h3 = document.createElement("h3");
         const p = document.createElement("p");
-        const button = document.createElement("button");
+        const buttonStatus = document.createElement("button");
+        const buttonRemove = document.createElement("button");
 
         // Adicionando conteúdo aos elementos
         h3.textContent = task.titulo;
         p.textContent = task.descricao;
-        button.textContent = task.concluida ? "Concluída" : "Pendente";
-        
+        buttonStatus.textContent = task.concluida ? "Concluída" : "Pendente";
+        buttonRemove.textContent = "Excluir Tarefa";
+
         // adicionando evento de troca do status da tarefa
-        button.addEventListener("click", async () => {});
+        buttonStatus.addEventListener("click", async () => {});
 
         // adicionando elementos ao dom
         cardTask.appendChild(informationTask);
         cardTask.appendChild(buttonTask);
         informationTask.appendChild(h3);
         informationTask.appendChild(p);
-        buttonTask.appendChild(button);
+        buttonTask.appendChild(buttonStatus);
+        buttonTask.appendChild(buttonRemove);
         
         // adicionando as classes de estilo
         cardTask.classList.add("card");
@@ -298,39 +302,3 @@ async function loadTasks(tasks) {
         gridTasks.appendChild(cardTask);
     }
 }
-
-
-// Manipulações com a API
-
-// get
-async function getUsers() {
-    const response = await fetch(
-        "http://localhost:3000/usuarios"
-    );
-    return await response.json();
-}
-
-async function getTasks(userId) {
-    const response = await fetch(
-        `http://localhost:3000/usuarios/${userId}/tarefas`
-    );
-    return await response.json();
-}
-
-
-// create
-async function createUser() {
-
-}
-
-async function createTask() {}
-
-
-// update
-async function updateUser() {}
-async function updateStatusTask() {}
-
-
-// delete
-async function deleteUser() {}
-async function deleteTask() {}
