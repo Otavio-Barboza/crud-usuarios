@@ -112,8 +112,11 @@ buttonSaveRegister.addEventListener("click", async (event) => {
     const isPasswordValid = Object.values(validationPassword).every(value => value === true);
     const messageRegister = document.querySelector("#messageRegister");
     
-    if (isPasswordValid) {
-        messageRegister.textContent = "Usuário Cadastrado com Sucesso!";
+    if (!isPasswordValid) {
+        messageRegister.textContent = "Algum dado inserido está incorreto.";
+    }
+    
+    try {
         await createUser({
             name : inputName.value,
             email : inputEmail.value,
@@ -122,14 +125,26 @@ buttonSaveRegister.addEventListener("click", async (event) => {
             cpf : inputCpf.value,
             password : inputPassword.value
         });
-        resetFields();
-    } else {
-        messageRegister.textContent = "Algum dado inserido está incorreto.";
+        
+        console.log("Usuário criado!");
+    } catch (error) {
+        if (error.status === 400) {
+            console.log("dados inválidos");
+        } else if (error.status === 404) {
+            console.log("recurso não encontrado");
+        } else if (error.status >= 500) {
+            console.log("problema no servidor");
+        } else {
+            console.log("API indísponível ou outro erro");
+        }
     }
+    
+    resetFields();
     
     setTimeout(() => {
         messageRegister.textContent = "";
     }, 4000);
+    // return
 });
 
 
@@ -155,12 +170,26 @@ buttonSaveTask.addEventListener("click", async () => {
         return
     }
     
-    createTask({
-        title : inputTitleTask.value,
-        description : inputDescriptionTask.value,
-        status : false,
-        userId : selectedUser.userId
-    });
+    try {
+        await createTask({
+            title : inputTitleTask.value,
+            description : inputDescriptionTask.value,
+            status : false,
+            userId : selectedUser.userId
+        });
+
+        console.log("Tarefa criada!");
+    } catch (error) {
+        if (error.status === 400) {
+            console.log("dados inválidos");
+        } else if (error.status === 404) {
+            console.log("recurso não encontrado");
+        } else if (error.status >= 500) {
+            console.log("problema no servidor");
+        } else {
+            console.log("API indísponível ou outro erro");
+        }
+    }
 });
 
 
@@ -169,89 +198,116 @@ const buttonLoadUsers = document.querySelector("#loadUsers");
 
 buttonLoadUsers.addEventListener("click", async (event) => {
     const gridUsers = document.querySelector("#gridUsers");
-    const data = await getUsers();
+    
+    try {
+        const data = await getUsers();
+    
+        gridUsers.textContent = "";
 
-    gridUsers.textContent = "";
+        for (const user of data) {
+            // criando as bases
+            const cardUser = document.createElement("div");
+            const informationUser = document.createElement("div");
+            const buttonsUser = document.createElement("div");
 
-    for (const user of data) {
-        // criando as bases
-        const cardUser = document.createElement("div");
-        const informationUser = document.createElement("div");
-        const buttonsUser = document.createElement("div");
-
-        // criando a primeira seção da base de cards
-        const h3 = document.createElement("h3");
-        const p = document.createElement("p");
-        
-        // criando a segunda seção da base de cards
-        const buttonTask = document.createElement("button");
-        const buttonEdit = document.createElement("button");
-        const buttonRemove = document.createElement("button");
-
-        // adicioando conteúdo aos elementos do primeiro conteúdo
-        h3.textContent = user.nome;
-        p.textContent = user.email;
-        
-        // criando os botões da segunda seção
-        buttonTask.textContent = "Ver Tarefas";
-        buttonEdit.textContent = "Editar Usuário";
-        buttonRemove.textContent = "Excluir Usuário";
-
-        // adicionando o ID ao card para recuperá-lo ao clicar nele e alterar seu estilo
-        cardUser.id = user.id;
-
-        // Adicionando eventos de click aos cards.
-        cardUser.addEventListener("click", () => {
-            // carregando dados temporários
-            selectedUser.name = user.nome;
-            selectedUser.userId = user.id;
+            // criando a primeira seção da base de cards
+            const h3 = document.createElement("h3");
+            const p = document.createElement("p");
             
-            // alterando estilo
-            console.log(`clicando no card ${cardUser.id}`);
-            selectCardUser(cardUser);
-        });
-        
-        // Adicionando o evento de click em ambos botões
-        buttonTask.addEventListener("click", async () => {
-            // carregando dados temporários
-            selectedUser.name = user.nome;
-            selectedUser.userId = user.id;
-            selectedUser.cardId = user.id;
+            // criando a segunda seção da base de cards
+            const buttonTask = document.createElement("button");
+            const buttonEdit = document.createElement("button");
+            const buttonRemove = document.createElement("button");
+
+            // adicioando conteúdo aos elementos do primeiro conteúdo
+            h3.textContent = user.nome;
+            p.textContent = user.email;
             
-            // alterando estilo
-            selectCardUser(cardUser);
+            // criando os botões da segunda seção
+            buttonTask.textContent = "Ver Tarefas";
+            buttonEdit.textContent = "Editar Usuário";
+            buttonRemove.textContent = "Excluir Usuário";
+
+            // adicionando o ID ao card para recuperá-lo ao clicar nele e alterar seu estilo
+            cardUser.id = user.id;
+
+            // Adicionando eventos de click aos cards.
+            cardUser.addEventListener("click", () => {
+                // carregando dados temporários
+                selectedUser.name = user.nome;
+                selectedUser.userId = user.id;
+                
+                // alterando estilo
+                console.log(`clicando no card ${cardUser.id}`);
+                selectCardUser(cardUser);
+            });
             
-            // carregando tarefas do usuário
-            const dataUserTasks = await getTasks(user.id);
-            await loadTasks(dataUserTasks);
-        });
+            // Adicionando o evento de click em ambos botões
+            buttonTask.addEventListener("click", async () => {
+                // carregando dados temporários
+                selectedUser.name = user.nome;
+                selectedUser.userId = user.id;
+                selectedUser.cardId = user.id;
+                
+                // alterando estilo
+                selectCardUser(cardUser);
+                
+                // carregando tarefas do usuário
+                try {
+                    // const dataUserTasks = await getTasks(user.id);
+                    const dataUserTasks = await getTasks(999);
+                    await loadTasks(dataUserTasks);
 
-        buttonEdit.addEventListener("click", () => {
-            console.log("Editando Usuário");
-        });
-        
-        // adicionando as seções principais
-        cardUser.appendChild(informationUser);
-        cardUser.appendChild(buttonsUser);
-        cardUser.appendChild(buttonsUser);
+                } catch (error) {
+                    if (error.status === 400) {
+                        console.log("dados inválidos");
+                    } else if (error.status === 404) {
+                        console.log("recurso não encontrado");
+                    } else if (error.status >= 500) {
+                        console.log("problema no servidor");
+                    } else {
+                        console.log("API indísponível ou outro erro");
+                    }
+                }
+            });
 
-        
-        // adicionando os conteúdos das sessões
-        informationUser.appendChild(h3);
-        informationUser.appendChild(p);
-        buttonsUser.appendChild(buttonTask);
-        buttonsUser.appendChild(buttonEdit);
-        buttonsUser.appendChild(buttonRemove);
+            buttonEdit.addEventListener("click", () => {
+                console.log("Editando Usuário");
+            });
+            
+            // adicionando as seções principais
+            cardUser.appendChild(informationUser);
+            cardUser.appendChild(buttonsUser);
+            cardUser.appendChild(buttonsUser);
+
+            
+            // adicionando os conteúdos das sessões
+            informationUser.appendChild(h3);
+            informationUser.appendChild(p);
+            buttonsUser.appendChild(buttonTask);
+            buttonsUser.appendChild(buttonEdit);
+            buttonsUser.appendChild(buttonRemove);
 
 
-        // adicionando as classes de estilo
-        cardUser.classList.add("card");
-        informationUser.classList.add("information");
-        buttonsUser.classList.add("buttons");
-        buttonsUser.classList.add("buttonsUser");
+            // adicionando as classes de estilo
+            cardUser.classList.add("card");
+            informationUser.classList.add("information");
+            buttonsUser.classList.add("buttons");
+            buttonsUser.classList.add("buttonsUser");
 
-        // adicionando o card à grid
-        gridUsers.appendChild(cardUser);
+            // adicionando o card à grid
+            gridUsers.appendChild(cardUser);
+        }
+    } catch (error) {
+        if (error.status === 400) {
+            console.log("dados inválidos");
+        } else if (error.status === 404) {
+            console.log("recurso não encontrado");
+        } else if (error.status >= 500) {
+            console.log("problema no servidor");
+        } else {
+            console.log("API indísponível ou outro erro");
+        }
     }
 });
 

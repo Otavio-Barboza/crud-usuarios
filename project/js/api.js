@@ -1,24 +1,22 @@
+import { request } from "./utils.js";
+
 // Manipulações com a API
 
 // get
 async function getUsers() {
-    const response = await fetch(
-        "http://localhost:3000/usuarios"
-    );
-    return await response.json();
+    return await request("http://localhost:3000/usuarios");
 }
 
-async function getTasks(userId) {
-    const response = await fetch(
-        `http://localhost:3000/usuarios/${userId}/tarefas`
+async function getTasks(id) {
+    return request(
+        `http://localhost:3000/usuarios/${id}/tarefas`
     );
-    return await response.json();
 }
 
 
 // create
 async function createUser(data) {
-    await fetch("http://localhost:3000/usuarios", {
+    return await request("http://localhost:3000/usuarios", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -35,7 +33,7 @@ async function createUser(data) {
 }
 
 async function createTask(data) {
-    const response = await fetch("http://localhost:3000/tarefas", {
+    return await request("http://localhost:3000/tarefas", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -47,20 +45,42 @@ async function createTask(data) {
             usuarioId : data.userId
         })
     });
-
-    const task = await response.json();
-    console.log(task);
 }
 
 
 // update
-async function updateUser() {}
-async function updateStatusTask() {}
+async function updateUser(id, data) {
+    return await request(`http://localhost:3000/usuarios/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nome: data.name,
+            email: data.email,
+            curso: data.class,
+            telefone: data.phone,
+            cpf: data.cpf,
+            senha: data.password
+        })
+    });
+}
+
+async function updateStatusTask(id, data) {}
 
 
 // delete
-async function deleteUser() {}
-async function deleteTask() {}
+async function deleteUser(id) {
+    return await request(`http://localhost:3000/usuarios/${id}`, {
+        method: "DELETE"
+    });
+}
+
+async function deleteTask(id) {
+    return await request(`http://localhost:3000/tarefas/${id}`, {
+        method: "DELETE"
+    });
+}
 
 
 export {

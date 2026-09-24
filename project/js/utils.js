@@ -51,9 +51,29 @@ function selectCardUser(card) {
     card.classList.add("selectedCard");
 }
 
+async function request(url, options = {}) {
+    const response = await fetch(url, options);
+
+    if (response.status === 204) {
+        return null;
+    }
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        const error = new Error(data.messagem || "Erro na requisição");
+        error.status = response.status;
+        throw error;
+    }
+
+    return data;
+}
+
+
 export {
     selectedUser,
     validationPassword,
     resetFields,
-    selectCardUser
+    selectCardUser,
+    request
 };
