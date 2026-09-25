@@ -8,9 +8,7 @@ async function getUsers() {
 }
 
 async function getTasks(id) {
-    return request(
-        `http://localhost:3000/usuarios/${id}/tarefas`
-    );
+    return request(`http://localhost:3000/usuarios/${id}/tarefas`);
 }
 
 

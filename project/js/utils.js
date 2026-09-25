@@ -61,7 +61,7 @@ async function request(url, options = {}) {
     const data = await response.json();
 
     if (!response.ok) {
-        const error = new Error(data.messagem || "Erro na requisição");
+        const error = new Error(data.mensagem || "Erro na requisição");
         error.status = response.status;
         throw error;
     }
@@ -84,11 +84,39 @@ function updateStatusPassword() {
     }
 }
 
+function createCard(type, data) {
+    const card = document.createElement("div");
+    const information = document.createElement("div");
+    const buttons = document.createElement("div");
+
+    const h3 = document.createElement("h3");
+    const p = document.createElement("p");
+
+    h3.textContent = type === "user" ? data.nome : data.titulo;
+    p.textContent = type === "user" ? data.email : data.descricao;
+
+    card.classList.add("card");
+    information.classList.add("information");
+    buttons.classList.add("buttons");
+
+    card.appendChild(information);
+    card.appendChild(buttons);
+
+    information.appendChild(h3);
+    information.appendChild(p);
+
+    return {
+        card,
+        buttons
+    };
+}
+
 export {
     selectedUser,
     validationPassword,
     resetFields,
     selectCardUser,
     request,
-    updateStatusPassword
+    updateStatusPassword,
+    createCard
 };

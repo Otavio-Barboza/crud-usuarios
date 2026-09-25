@@ -4,7 +4,8 @@ import {
     validationPassword,
     resetFields,
     selectCardUser,
-    updateStatusPassword
+    updateStatusPassword,
+    createCard
 } from "./utils.js";
 
 // import das functions de acesso a API.
@@ -105,8 +106,6 @@ buttonSaveRegister.addEventListener("click", async (event) => {
     const messageRegister = document.querySelector("#messageRegister");
     
     if (!isPasswordValid) {
-        console.log(validationPassword);
-        console.log(isPasswordValid);
         messageRegister.textContent = "Sua senha não está no padrão exigido!";
         return
     }
@@ -121,7 +120,7 @@ buttonSaveRegister.addEventListener("click", async (event) => {
                 cpf : inputCpf.value,
                 password : inputPassword.value
             });
-            console.log("Usuário criado!");
+            messageRegister.textContent = "Usuário criado!";
         } else {
             await updateUser(editingUserId, {
                 name : inputName.value,
@@ -131,25 +130,19 @@ buttonSaveRegister.addEventListener("click", async (event) => {
                 cpf : inputCpf.value,
                 password : inputPassword.value
             });
-            console.log("Usuário atualizado!");
-
             messageRegister.textContent = "Usuário atualizado!";
         }
+
+        await loadUsers();
     } catch (error) {
         if (error.status === 400) {
-            messageRegister.textContent = "dados inválidos";
-            console.log("dados inválidos");
+            messageRegister.textContent = "Dados inválidos!";
         } else if (error.status === 404) {
-            messageRegister.textContent = "recurso não encontrado";
-            console.log("recurso não encontrado");
+            messageRegister.textContent = "Item não encontrado, tente novamente!";
         } else if (error.status >= 500) {
-            messageRegister.textContent = "problema no servidor";
-            console.log("problema no servidor");
+            messageRegister.textContent = "Problema no servidor, tente mais tarde!";
         } else {
-            messageRegister.textContent = "API indísponível ou outro erro";
-            
-            console.log("elemento:", messageRegister);
-            console.log("texto:", messageRegister.textContent);
+            messageRegister.textContent = "Erro inesperado!";
         }
     }
     
@@ -169,19 +162,21 @@ const buttonSaveTask = document.querySelector("#saveTask");
 buttonSaveTask.addEventListener("click", async () => {
     const inputTitleTask = document.querySelector("#inputTitleTask");
     const inputDescriptionTask = document.querySelector("#inputDescriptionTask");
+    const taskMessage = document.querySelector("#taskMessage");
     
     if (selectedUser.userId == null) {
-        console.log("Selecione um usuário para adicionar uma tarefa!")
+        console.log("")
+        taskMessage.textContent = "Selecione um usuário para adicionar uma tarefa!";
         return
     } 
     
     if (inputTitleTask.value.trim() === "") {
-        console.log("Preencha o campo de título da tarefa!")
+        taskMessage.textContent = "Preencha o campo de título da tarefa!";
         return
     }
     
     if (inputDescriptionTask.value.trim() === "") {
-        console.log("Preencha o campo de descrição da tarefa!")
+        taskMessage.textContent = "Preencha o campo de descrição da tarefa!";
         return
     }
     
@@ -193,18 +188,20 @@ buttonSaveTask.addEventListener("click", async () => {
             userId : selectedUser.userId
         });
 
-        console.log("Tarefa criada!");
+        taskMessage.textContent = "Tarefa criada!";
+        await loadTasks();
     } catch (error) {
         if (error.status === 400) {
-            console.log("dados inválidos");
+            taskMessage.textContent = "Dados inválidos!";
         } else if (error.status === 404) {
-            console.log("recurso não encontrado");
+            taskMessage.textContent = "Item não encontrado, tente novamente!";
         } else if (error.status >= 500) {
-            console.log("problema no servidor");
+            taskMessage.textContent = "Problema no servidor, tente mais tarde!";
         } else {
-            console.log("API indísponível ou outro erro");
+            taskMessage.textContent = "Erro inesperado!";
         }
     }
+
 });
 
 
@@ -212,7 +209,12 @@ buttonSaveTask.addEventListener("click", async () => {
 const buttonLoadUsers = document.querySelector("#loadUsers");
 
 buttonLoadUsers.addEventListener("click", async (event) => {
+    await loadUsers();
+});
+
+async function loadUsers() {
     const gridUsers = document.querySelector("#gridUsers");
+    const messageRegister = document.querySelector("#messageRegister");
     
     try {
         const data = await getUsers();
@@ -221,24 +223,13 @@ buttonLoadUsers.addEventListener("click", async (event) => {
 
         for (const user of data) {
             // criando as bases
-            const cardUser = document.createElement("div");
-            const informationUser = document.createElement("div");
-            const buttonsUser = document.createElement("div");
+            const { card : cardUser, buttons : buttonsUser } = createCard("user", user);
 
-            // criando a primeira seção da base de cards
-            const h3 = document.createElement("h3");
-            const p = document.createElement("p");
-            
-            // criando a segunda seção da base de cards
+            // criando os botões da segunda seção
             const buttonTask = document.createElement("button");
             const buttonEdit = document.createElement("button");
             const buttonRemove = document.createElement("button");
 
-            // adicioando conteúdo aos elementos do primeiro conteúdo
-            h3.textContent = user.nome;
-            p.textContent = user.email;
-            
-            // criando os botões da segunda seção
             buttonTask.textContent = "Ver Tarefas";
             buttonEdit.textContent = "Editar Usuário";
             buttonRemove.textContent = "Excluir Usuário";
@@ -248,13 +239,14 @@ buttonLoadUsers.addEventListener("click", async (event) => {
 
             // Adicionando eventos de click aos cards.
             cardUser.addEventListener("click", () => {
+                const taskMessage = document.querySelector("#taskMessage");
                 // carregando dados temporários
                 selectedUser.name = user.nome;
                 selectedUser.userId = user.id;
                 
                 // alterando estilo
-                console.log(`clicando no card ${cardUser.id}`);
                 selectCardUser(cardUser);
+                taskMessage.textContent = `Usuário selecionado: ${user.nome}`;
             });
             
             // Adicionando o evento de click em ambos botões
@@ -268,22 +260,7 @@ buttonLoadUsers.addEventListener("click", async (event) => {
                 selectCardUser(cardUser);
                 
                 // carregando tarefas do usuário
-                try {
-                    // const dataUserTasks = await getTasks(user.id);
-                    const dataUserTasks = await getTasks(user.id);
-                    await loadTasks(dataUserTasks);
-
-                } catch (error) {
-                    if (error.status === 400) {
-                        console.log("dados inválidos");
-                    } else if (error.status === 404) {
-                        console.log("recurso não encontrado");
-                    } else if (error.status >= 500) {
-                        console.log("problema no servidor");
-                    } else {
-                        console.log("API indísponível ou outro erro");
-                    }
-                }
+                await loadTasks();
             });
 
             buttonEdit.addEventListener("click", async () => {
@@ -309,35 +286,25 @@ buttonLoadUsers.addEventListener("click", async (event) => {
                     await deleteUser(user.id);
                 } catch (error) {
                     if (error.status === 400) {
-                        console.log("dados inválidos");
+                        messageRegister.textContent = "Dados inválidos!";
                     } else if (error.status === 404) {
-                        console.log("recurso não encontrado");
+                        messageRegister.textContent = "Item não encontrado, tente novamente!";
                     } else if (error.status >= 500) {
-                        console.log("problema no servidor");
+                        messageRegister.textContent = "Problema no servidor, tente mais tarde!";
                     } else {
-                        console.log("API indísponível ou outro erro");
+                        messageRegister.textContent = "Erro inesperado!";
                     }
                 }
+
+                await loadUsers();
             });
             
-            // adicionando as seções principais
-            cardUser.appendChild(informationUser);
-            cardUser.appendChild(buttonsUser);
-            cardUser.appendChild(buttonsUser);
-
-            
-            // adicionando os conteúdos das sessões
-            informationUser.appendChild(h3);
-            informationUser.appendChild(p);
+            // adicionando os botões
             buttonsUser.appendChild(buttonTask);
             buttonsUser.appendChild(buttonEdit);
             buttonsUser.appendChild(buttonRemove);
-
-
-            // adicionando as classes de estilo
-            cardUser.classList.add("card");
-            informationUser.classList.add("information");
-            buttonsUser.classList.add("buttons");
+            
+            // adicionando classe de estilo
             buttonsUser.classList.add("buttonsUser");
 
             // adicionando o card à grid
@@ -345,88 +312,113 @@ buttonLoadUsers.addEventListener("click", async (event) => {
         }
     } catch (error) {
         if (error.status === 400) {
-            console.log("dados inválidos");
+            messageRegister.textContent = "Dados inválidos!";
+
         } else if (error.status === 404) {
-            console.log("recurso não encontrado");
+            messageRegister.textContent = "Item não encontrado, tente novamente!";
         } else if (error.status >= 500) {
-            console.log("problema no servidor");
+            messageRegister.textContent = "Problema no servidor, tente mais tarde!";
         } else {
-            console.log("API indísponível ou outro erro");
+            messageRegister.textContent = "Erro inesperado!";
         }
     }
-});
+}
 
-async function loadTasks(tasks) {
+async function loadTasks() {
     const gridTasks = document.querySelector("#gridTasks");
+    const taskMessage = document.querySelector("#taskMessage");
 
     gridTasks.textContent = "";
 
-    for (const task of tasks) {
-        // criando bases
-        const cardTask = document.createElement("div");
-        const informationTask = document.createElement("div");
-        const buttonTask = document.createElement("div");
-        
-        // criando elementos da primeira sessão
-        const h3 = document.createElement("h3");
-        const p = document.createElement("p");
-        const buttonStatus = document.createElement("button");
-        const buttonRemove = document.createElement("button");
+    try {
+        // const dataUserTasks = await getTasks(user.id);
+        const dataUserTasks = await getTasks(selectedUser.userId);
 
-        // Adicionando conteúdo aos elementos
-        h3.textContent = task.titulo;
-        p.textContent = task.descricao;
-        buttonStatus.textContent = task.concluida ? "Concluída" : "Pendente";
-        buttonRemove.textContent = "Excluir Tarefa";
-
-        // adicionando evento de troca do status da tarefa
-        buttonStatus.addEventListener("click", async () => {
-            await updateStatusTask(task.id, {
-                title: task.titulo,
-                description: task.descricao,
-                status: !task.concluida,
-                userId: task.usuarioId
+        for (const task of dataUserTasks) {
+            // criando bases
+            const { card : cardTask, buttons : buttonTask } = createCard("task", task); 
+            
+            const buttonStatus = document.createElement("button");
+            const buttonRemove = document.createElement("button");
+            
+            buttonStatus.textContent = task.concluida ? "Concluída" : "Pendente";
+            buttonRemove.textContent = "Excluir Tarefa";
+            
+            // adicionando evento de troca do status da tarefa
+            buttonStatus.addEventListener("click", async () => {
+                try {
+                    task.concluida = !task.concluida;
+                    
+                    await updateStatusTask(task.id, {
+                        title: task.titulo,
+                        description: task.descricao,
+                        status: task.concluida,
+                        userId: task.usuarioId
+                    });
+                    
+                    buttonTask.classList.remove(
+                        task.concluida ? "buttonsTasksPending" : "buttonsTasksCheck"
+                    );
+    
+                    buttonTask.classList.add(
+                        task.concluida ? "buttonsTasksCheck" : "buttonsTasksPending"
+                    );
+    
+                    buttonStatus.textContent = task.concluida
+                        ? "Concluída"
+                        : "Pendente";
+                } catch (error) {
+                    if (error.status === 400) {
+                        taskMessage.textContent = "Dados inválidos!";
+                    } else if (error.status === 404) {
+                        taskMessage.textContent = "Item não encontrado, tente novamente!";
+                    } else if (error.status >= 500) {
+                        taskMessage.textContent = "Problema no servidor, tente mais tarde!";
+                    } else {
+                        taskMessage.textContent = "Erro inesperado!";
+                    }
+                }
             });
-          
+
+            buttonRemove.addEventListener("click", async () => {
+                try {
+                    await deleteTask(task.id);
+                } catch (error) {
+                    if (error.status === 400) {
+                        taskMessage.textContent = "Dados inválidos!";
+                    } else if (error.status === 404) {
+                        taskMessage.textContent = "Item não encontrado, tente novamente!";
+                    } else if (error.status >= 500) {
+                        taskMessage.textContent = "Problema no servidor, tente mais tarde!";
+                    } else {
+                        taskMessage.textContent = "Erro inesperado!";
+                    }
+                }
+
+                await loadTasks();
+            });
+
+            // adicionando elementos ao dom
+            buttonTask.appendChild(buttonStatus);
+            buttonTask.appendChild(buttonRemove);
+            
+            // adicionando as classes de estilo
             buttonTask.classList.add(
                 task.concluida ? "buttonsTasksCheck" : "buttonsTasksPending"
             );
-        });
 
-        buttonRemove.addEventListener("click", async () => {
-            try {
-                await deleteTask(task.id);
-            } catch (error) {
-                if (error.status === 400) {
-                    console.log("dados inválidos");
-                } else if (error.status === 404) {
-                    console.log("recurso não encontrado");
-                } else if (error.status >= 500) {
-                    console.log("problema no servidor");
-                } else {
-                    console.log("API indísponível ou outro erro");
-                }
-            }
-        });
-
-        // adicionando elementos ao dom
-        cardTask.appendChild(informationTask);
-        cardTask.appendChild(buttonTask);
-        informationTask.appendChild(h3);
-        informationTask.appendChild(p);
-        buttonTask.appendChild(buttonStatus);
-        buttonTask.appendChild(buttonRemove);
-        
-        // adicionando as classes de estilo
-        cardTask.classList.add("card");
-        informationTask.classList.add("information");
-        
-        buttonTask.classList.add("buttons");
-        buttonTask.classList.add(
-            task.concluida ? "buttonsTasksCheck" : "buttonsTasksPending"
-        );
-
-        // adicionando card ao dom
-        gridTasks.appendChild(cardTask);
+            // adicionando card ao dom
+            gridTasks.appendChild(cardTask);
+        }
+    } catch (error) {
+        if (error.status === 400) {
+            taskMessage.textContent = "Dados inválidos!";
+        } else if (error.status === 404) {
+            taskMessage.textContent = "Item não encontrado, tente novamente!";
+        } else if (error.status >= 500) {
+            taskMessage.textContent = "Problema no servidor, tente mais tarde!";
+        } else {
+            taskMessage.textContent = "Erro inesperado!";
+        }
     }
 }
