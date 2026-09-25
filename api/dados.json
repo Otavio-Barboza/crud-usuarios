@@ -1,0 +1,38 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "Ana Silva",
+      "email": "ana@email.com",
+      "curso": "Tecnologia em Sistemas para Internet",
+      "telefone": "(43) 99999-1111",
+      "cpf": "111.111.111-11",
+      "senha": "Ana@123"
+    },
+    {
+      "id": 3,
+      "nome": "Otavio Barboza",
+      "email": "barbozaotavio17@gmail.com",
+      "curso": "informática",
+      "telefone": "0000000",
+      "cpf": "000.000.000",
+      "senha": "as#f5G08"
+    }
+  ],
+  "tarefas": [
+    {
+      "id": 1,
+      "titulo": "Estudar JavaScript",
+      "descricao": "Revisar funções e arrays",
+      "concluida": false,
+      "usuarioId": 1
+    },
+    {
+      "id": 4,
+      "titulo": "Criar sistema CRUD online",
+      "descricao": "HTML, CSS e JS",
+      "concluida": true,
+      "usuarioId": 3
+    }
+  ]
+}
