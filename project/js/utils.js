@@ -69,11 +69,26 @@ async function request(url, options = {}) {
     return data;
 }
 
+function updateStatusPassword() {
+    for (let index = 0; index < validationPassword.length; index++) {
+
+        if (validationPassword[index].regex.test(inputPassword.value)) {
+            validationPassword[index].icon.classList.remove("bi-x-circle-fill");
+            validationPassword[index].icon.classList.add("bi-check-circle-fill");
+            validationPassword[index].status = true;
+        } else {
+            validationPassword[index].icon.classList.remove("bi-check-circle-fill");
+            validationPassword[index].icon.classList.add("bi-x-circle-fill");
+            validationPassword[index].status = false;
+        }
+    }
+}
 
 export {
     selectedUser,
     validationPassword,
     resetFields,
     selectCardUser,
-    request
+    request,
+    updateStatusPassword
 };

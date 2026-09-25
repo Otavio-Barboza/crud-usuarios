@@ -66,7 +66,20 @@ async function updateUser(id, data) {
     });
 }
 
-async function updateStatusTask(id, data) {}
+async function updateStatusTask(id, data) {
+    return await request(`http://localhost:3000/tarefas/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            titulo: data.title,
+            descricao: data.description,
+            concluida: data.status,
+            usuarioId: data.userId
+        })
+    });
+}
 
 
 // delete

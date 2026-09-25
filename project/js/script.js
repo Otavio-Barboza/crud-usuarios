@@ -3,7 +3,8 @@ import {
     selectedUser,
     validationPassword,
     resetFields,
-    selectCardUser
+    selectCardUser,
+    updateStatusPassword
 } from "./utils.js";
 
 // import das functions de acesso a API.
@@ -17,6 +18,9 @@ import {
     deleteUser,
     deleteTask
 } from "./api.js";
+
+// variável global
+let editingUserId = null;
 
 
 // inputs que não possuem eventos.
@@ -79,19 +83,7 @@ inputCpf.addEventListener("input", (event) => {
 const inputPassword = document.querySelector("#inputPassword");
 
 inputPassword.addEventListener("input", () => {
-
-    for (let index = 0; index < validationPassword.length; index++) {
-
-        if (validationPassword[index].regex.test(inputPassword.value)) {
-            validationPassword[index].icon.classList.remove("bi-x-circle-fill");
-            validationPassword[index].icon.classList.add("bi-check-circle-fill");
-            validationPassword[index].status = true;
-        } else {
-            validationPassword[index].icon.classList.remove("bi-check-circle-fill");
-            validationPassword[index].icon.classList.add("bi-x-circle-fill");
-            validationPassword[index].status = false;
-        }
-    }
+    updateStatusPassword();
 });
 
 
@@ -107,44 +99,67 @@ buttonCancelRegister.addEventListener("click", () => {
 const buttonSaveRegister = document.querySelector("#saveRegister");
 
 buttonSaveRegister.addEventListener("click", async (event) => {
-    // event.preventDefault();
+    event.preventDefault();
     
-    const isPasswordValid = Object.values(validationPassword).every(value => value === true);
+    const isPasswordValid = Object.values(validationPassword).every(value => value.status === true);
     const messageRegister = document.querySelector("#messageRegister");
     
     if (!isPasswordValid) {
-        messageRegister.textContent = "Algum dado inserido está incorreto.";
+        console.log(validationPassword);
+        console.log(isPasswordValid);
+        messageRegister.textContent = "Sua senha não está no padrão exigido!";
+        return
     }
     
     try {
-        await createUser({
-            name : inputName.value,
-            email : inputEmail.value,
-            class : inputClass.value,
-            phone : inputPhone.value,
-            cpf : inputCpf.value,
-            password : inputPassword.value
-        });
-        
-        console.log("Usuário criado!");
+        if (editingUserId === null) {
+            await createUser({
+                name : inputName.value,
+                email : inputEmail.value,
+                class : inputClass.value,
+                phone : inputPhone.value,
+                cpf : inputCpf.value,
+                password : inputPassword.value
+            });
+            console.log("Usuário criado!");
+        } else {
+            await updateUser(editingUserId, {
+                name : inputName.value,
+                email : inputEmail.value,
+                class : inputClass.value,
+                phone : inputPhone.value,
+                cpf : inputCpf.value,
+                password : inputPassword.value
+            });
+            console.log("Usuário atualizado!");
+
+            messageRegister.textContent = "Usuário atualizado!";
+        }
     } catch (error) {
         if (error.status === 400) {
+            messageRegister.textContent = "dados inválidos";
             console.log("dados inválidos");
         } else if (error.status === 404) {
+            messageRegister.textContent = "recurso não encontrado";
             console.log("recurso não encontrado");
         } else if (error.status >= 500) {
+            messageRegister.textContent = "problema no servidor";
             console.log("problema no servidor");
         } else {
-            console.log("API indísponível ou outro erro");
+            messageRegister.textContent = "API indísponível ou outro erro";
+            
+            console.log("elemento:", messageRegister);
+            console.log("texto:", messageRegister.textContent);
         }
     }
     
     resetFields();
     
+    editingUserId = null;
+
     setTimeout(() => {
         messageRegister.textContent = "";
     }, 4000);
-    // return
 });
 
 
@@ -255,7 +270,7 @@ buttonLoadUsers.addEventListener("click", async (event) => {
                 // carregando tarefas do usuário
                 try {
                     // const dataUserTasks = await getTasks(user.id);
-                    const dataUserTasks = await getTasks(999);
+                    const dataUserTasks = await getTasks(user.id);
                     await loadTasks(dataUserTasks);
 
                 } catch (error) {
@@ -271,8 +286,38 @@ buttonLoadUsers.addEventListener("click", async (event) => {
                 }
             });
 
-            buttonEdit.addEventListener("click", () => {
-                console.log("Editando Usuário");
+            buttonEdit.addEventListener("click", async () => {
+                editingUserId = user.id;
+
+                // Preenche os campos com os dados do usuário
+                inputName.value = user.nome;
+                inputEmail.value = user.email;
+                inputClass.value = user.curso;
+                inputPhone.value = user.telefone;
+                inputCpf.value = user.cpf;
+                inputPassword.value = user.senha;
+                
+                updateStatusPassword();
+
+                document.querySelector("#formRegister").scrollIntoView({
+                    behavior : "smooth"
+                });
+            });
+
+            buttonRemove.addEventListener("click", async () => {
+                try {
+                    await deleteUser(user.id);
+                } catch (error) {
+                    if (error.status === 400) {
+                        console.log("dados inválidos");
+                    } else if (error.status === 404) {
+                        console.log("recurso não encontrado");
+                    } else if (error.status >= 500) {
+                        console.log("problema no servidor");
+                    } else {
+                        console.log("API indísponível ou outro erro");
+                    }
+                }
             });
             
             // adicionando as seções principais
@@ -335,7 +380,34 @@ async function loadTasks(tasks) {
         buttonRemove.textContent = "Excluir Tarefa";
 
         // adicionando evento de troca do status da tarefa
-        buttonStatus.addEventListener("click", async () => {});
+        buttonStatus.addEventListener("click", async () => {
+            await updateStatusTask(task.id, {
+                title: task.titulo,
+                description: task.descricao,
+                status: !task.concluida,
+                userId: task.usuarioId
+            });
+          
+            buttonTask.classList.add(
+                task.concluida ? "buttonsTasksCheck" : "buttonsTasksPending"
+            );
+        });
+
+        buttonRemove.addEventListener("click", async () => {
+            try {
+                await deleteTask(task.id);
+            } catch (error) {
+                if (error.status === 400) {
+                    console.log("dados inválidos");
+                } else if (error.status === 404) {
+                    console.log("recurso não encontrado");
+                } else if (error.status >= 500) {
+                    console.log("problema no servidor");
+                } else {
+                    console.log("API indísponível ou outro erro");
+                }
+            }
+        });
 
         // adicionando elementos ao dom
         cardTask.appendChild(informationTask);
