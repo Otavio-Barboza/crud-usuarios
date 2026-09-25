@@ -11,7 +11,7 @@
     },
     {
       "id": 3,
-      "nome": "Otavio Barboza",
+      "nome": "Otavio",
       "email": "barbozaotavio17@gmail.com",
       "curso": "informática",
       "telefone": "0000000",
@@ -31,7 +31,7 @@
       "id": 4,
       "titulo": "Criar sistema CRUD online",
       "descricao": "HTML, CSS e JS",
-      "concluida": true,
+      "concluida": false,
       "usuarioId": 3
     }
   ]
